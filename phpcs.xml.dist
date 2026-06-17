@@ -31,5 +31,9 @@
 				<element value="silverLiquidDev"/>
 			</property>
 		</properties>
+		<!-- Template files run in the global scope; their loop/local iterator
+		     variables ($category, $cats, …) are not theme-defined globals.
+		     Keep prefix enforcement for functions, constants, and hooks. -->
+		<exclude name="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound"/>
 	</rule>
 </ruleset>

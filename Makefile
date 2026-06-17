@@ -80,21 +80,18 @@ shell: ## Open a shell in the WordPress container
 wp: ## Run a wp-cli command, e.g. make wp CMD="plugin list"
 	$(WP) $(CMD)
 
+# Install PHPCS + WPCS into /tmp (not the repo), then run from the repo root so
+# phpcs.xml.dist drives the ruleset — identical to the CI phpcs job.
+PHPCS_SETUP = composer config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true && \
+	composer require --quiet --no-interaction squizlabs/php_codesniffer:^3.9 wp-coding-standards/wpcs:^3 dealerdirect/phpcodesniffer-composer-installer
+
 .PHONY: lint
 lint: ## Lint theme against WordPress coding standards (phpcs in a container)
-	docker run --rm -v "$(CURDIR)/$(SRC):/work" -w /work \
-		ghcr.io/wp-cli/wp-cli-bundle:latest sh -c '\
-		composer global require --quiet wp-coding-standards/wpcs:^3 phpcsstandards/phpcsutils && \
-		~/.composer/vendor/bin/phpcs --config-set installed_paths ~/.composer/vendor/wp-coding-standards/wpcs >/dev/null && \
-		~/.composer/vendor/bin/phpcs --standard=WordPress --extensions=php .'
+	docker run --rm -v "$(CURDIR):/work" -w /tmp composer:2 sh -c '$(PHPCS_SETUP) && cd /work && /tmp/vendor/bin/phpcs'
 
 .PHONY: phpcbf
 phpcbf: ## Auto-fix coding-standard issues where possible
-	docker run --rm -v "$(CURDIR)/$(SRC):/work" -w /work \
-		ghcr.io/wp-cli/wp-cli-bundle:latest sh -c '\
-		composer global require --quiet wp-coding-standards/wpcs:^3 phpcsstandards/phpcsutils && \
-		~/.composer/vendor/bin/phpcs --config-set installed_paths ~/.composer/vendor/wp-coding-standards/wpcs >/dev/null && \
-		~/.composer/vendor/bin/phpcbf --standard=WordPress --extensions=php .'
+	docker run --rm -v "$(CURDIR):/work" -w /tmp composer:2 sh -c '$(PHPCS_SETUP) && cd /work && /tmp/vendor/bin/phpcbf'
 
 .PHONY: zip
 zip: ## Build distributable theme zip in dist/ (wrapped in a silver-liquid-dev/ folder)

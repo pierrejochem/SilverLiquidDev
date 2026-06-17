@@ -76,7 +76,7 @@ function silver_liquid_dev_assets() {
 		'silver-liquid-dev-fonts',
 		'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap',
 		array(),
-		null // Google Fonts is externally versioned; no theme version applies. phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+		null // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- Google Fonts is externally versioned.
 	);
 
 	wp_enqueue_style( 'silver-liquid-dev-style', get_stylesheet_uri(), array( 'silver-liquid-dev-fonts' ), SILVER_LIQUID_DEV_VERSION );
