@@ -76,6 +76,8 @@ GitHub Actions workflows live in `.github/workflows/`:
   - Builds the theme zip and verifies it's wrapped in a single `silver-liquid-dev/` folder (uploaded as an artifact)
 - **Release** (`release.yml`) — runs on a `v*` tag: verifies the tag matches the `Version:` header in `style.css`, builds the zip, and publishes a GitHub Release with the zip attached and the matching changelog section as notes.
 
+**Dependabot** (`.github/dependabot.yml`) opens weekly grouped PRs for GitHub Actions and the Docker image tags in `docker-compose.yml`.
+
 Cut a release:
 
 ```bash
