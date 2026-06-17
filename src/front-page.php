@@ -67,12 +67,14 @@ get_header();
 
 <?php
 // Stack tags built from the most-used categories.
-$cats = get_categories( array(
-	'orderby'    => 'count',
-	'order'      => 'DESC',
-	'number'     => 12,
-	'hide_empty' => true,
-) );
+$cats = get_categories(
+	array(
+		'orderby'    => 'count',
+		'order'      => 'DESC',
+		'number'     => 12,
+		'hide_empty' => true,
+	)
+);
 if ( ! empty( $cats ) ) :
 	?>
 	<section class="section wrap" aria-label="<?php esc_attr_e( 'Topics', 'silver-liquid-dev' ); ?>">
@@ -82,9 +84,9 @@ if ( ! empty( $cats ) ) :
 			</div>
 		</div>
 		<div class="stack-tags">
-			<?php foreach ( $cats as $cat ) : ?>
-				<a href="<?php echo esc_url( get_category_link( $cat->term_id ) ); ?>">
-					<?php echo esc_html( $cat->name ); ?>
+			<?php foreach ( $cats as $category ) : ?>
+				<a href="<?php echo esc_url( get_category_link( $category->term_id ) ); ?>">
+					<?php echo esc_html( $category->name ); ?>
 				</a>
 			<?php endforeach; ?>
 		</div>
@@ -106,11 +108,13 @@ endif;
 
 	<div class="post-list">
 		<?php
-		$latest = new WP_Query( array(
-			'post_type'           => 'post',
-			'posts_per_page'      => 6,
-			'ignore_sticky_posts' => true,
-		) );
+		$latest = new WP_Query(
+			array(
+				'post_type'           => 'post',
+				'posts_per_page'      => 6,
+				'ignore_sticky_posts' => true,
+			)
+		);
 
 		if ( $latest->have_posts() ) :
 			while ( $latest->have_posts() ) :

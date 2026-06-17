@@ -4,6 +4,7 @@
  *
  * @package Silver_Liquid_Dev
  */
+
 ?>
 <article <?php post_class( 'card' ); ?>>
 	<div class="card-meta">
@@ -20,7 +21,7 @@
 	<p class="card-excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt(), 30, '…' ) ); ?></p>
 
 	<div class="card-foot">
-		<a class="read-more" href="<?php the_permalink(); ?>" aria-label="<?php echo esc_attr( sprintf( __( 'Read %s', 'silver-liquid-dev' ), get_the_title() ) ); ?>">
+		<a class="read-more" href="<?php the_permalink(); ?>" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: post title. */ __( 'Read %s', 'silver-liquid-dev' ), get_the_title() ) ); ?>">
 			<?php esc_html_e( 'read', 'silver-liquid-dev' ); ?> <?php echo silver_liquid_dev_icon( 'arrow' ); // phpcs:ignore ?>
 		</a>
 	</div>

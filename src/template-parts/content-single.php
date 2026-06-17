@@ -4,6 +4,7 @@
  *
  * @package Silver_Liquid_Dev
  */
+
 ?>
 <article <?php post_class( 'article' ); ?>>
 	<header class="article-header">
@@ -27,10 +28,12 @@
 		<?php
 		the_content();
 
-		wp_link_pages( array(
-			'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'silver-liquid-dev' ),
-			'after'  => '</div>',
-		) );
+		wp_link_pages(
+			array(
+				'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'silver-liquid-dev' ),
+				'after'  => '</div>',
+			)
+		);
 		?>
 	</div>
 
@@ -39,8 +42,8 @@
 	if ( $tags ) :
 		?>
 		<div class="tags-row">
-			<?php foreach ( $tags as $tag ) : ?>
-				<a class="pill" href="<?php echo esc_url( get_tag_link( $tag->term_id ) ); ?>">#<?php echo esc_html( $tag->name ); ?></a>
+			<?php foreach ( $tags as $post_tag ) : ?>
+				<a class="pill" href="<?php echo esc_url( get_tag_link( $post_tag->term_id ) ); ?>">#<?php echo esc_html( $post_tag->name ); ?></a>
 			<?php endforeach; ?>
 		</div>
 	<?php endif; ?>

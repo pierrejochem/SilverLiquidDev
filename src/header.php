@@ -4,6 +4,7 @@
  *
  * @package Silver_Liquid_Dev
  */
+
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
@@ -41,18 +42,25 @@
 			<nav class="nav primary-nav" id="primary-nav" aria-label="<?php esc_attr_e( 'Primary', 'silver-liquid-dev' ); ?>">
 				<?php
 				if ( has_nav_menu( 'primary' ) ) {
-					wp_nav_menu( array(
-						'theme_location' => 'primary',
-						'container'      => false,
-						'menu_class'     => 'menu',
-						'depth'          => 1,
-						'fallback_cb'    => false,
-					) );
+					wp_nav_menu(
+						array(
+							'theme_location' => 'primary',
+							'container'      => false,
+							'menu_class'     => 'menu',
+							'depth'          => 1,
+							'fallback_cb'    => false,
+						)
+					);
 				} else {
 					// Sensible default if no menu is assigned yet.
 					echo '<ul class="menu">';
 					echo '<li class="menu-item"><a href="' . esc_url( home_url( '/' ) ) . '">' . esc_html__( 'Home', 'silver-liquid-dev' ) . '</a></li>';
-					wp_list_pages( array( 'title_li' => '', 'depth' => 1 ) );
+					wp_list_pages(
+						array(
+							'title_li' => '',
+							'depth'    => 1,
+						)
+					);
 					echo '</ul>';
 				}
 				?>

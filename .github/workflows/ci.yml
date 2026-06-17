@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+jobs:
+  php-lint:
+    name: PHP syntax (${{ matrix.php }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['7.4', '8.0', '8.1', '8.2', '8.3']
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+      - name: Lint all PHP files
+        run: |
+          find src -name '*.php' -print0 \
+            | xargs -0 -n1 -P4 php -l
+
+  phpcs:
+    name: WordPress Coding Standards
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+          tools: cs2pr
+      - name: Install PHP_CodeSniffer + WPCS
+        run: |
+          composer global require --no-interaction --no-progress \
+            "squizlabs/php_codesniffer:^3.9" \
+            "wp-coding-standards/wpcs:^3" \
+            "phpcsstandards/phpcsutils:^1" \
+            "phpcsstandards/phpcsextra:^1"
+          echo "$(composer global config bin-dir --absolute -q)" >> "$GITHUB_PATH"
+      - name: Configure installed standards
+        run: phpcs --config-set installed_paths "$(composer global config home -q)/vendor/wp-coding-standards/wpcs,$(composer global config home -q)/vendor/phpcsstandards/phpcsutils,$(composer global config home -q)/vendor/phpcsstandards/phpcsextra"
+      - name: Run PHPCS
+        # Fail on errors only; warnings are reported but don't break the build.
+        run: phpcs -q --report=checkstyle --runtime-set ignore_warnings_on_exit 1 | cs2pr
+
+  package:
+    name: Build theme zip
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build package
+        run: make zip
+      - name: Verify zip is wrapped in a single theme folder
+        run: |
+          test -f dist/silver-liquid-dev.zip
+          top="$(unzip -Z1 dist/silver-liquid-dev.zip | head -1)"
+          echo "Top-level entry: $top"
+          test "$top" = "silver-liquid-dev/"
+          unzip -l dist/silver-liquid-dev.zip | grep -q "silver-liquid-dev/style.css"
+          unzip -l dist/silver-liquid-dev.zip | grep -q "silver-liquid-dev/readme.txt"
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: silver-liquid-dev-zip
+          path: dist/silver-liquid-dev.zip
+          if-no-files-found: error

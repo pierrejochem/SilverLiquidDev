@@ -4,6 +4,7 @@
  *
  * @package Silver_Liquid_Dev
  */
+
 ?>
 	</main><!-- #main -->
 
@@ -15,11 +16,11 @@
 
 			<div class="footer-social">
 				<?php
-				foreach ( silver_liquid_dev_social_links() as $key => $link ) {
+				foreach ( silver_liquid_dev_social_links() as $key => $social ) {
 					printf(
 						'<a href="%1$s" aria-label="%2$s" rel="noopener"%4$s>%3$s</a>',
-						esc_url( $link['url'] ),
-						esc_attr( $link['label'] ),
+						esc_url( $social['url'] ),
+						esc_attr( $social['label'] ),
 						silver_liquid_dev_icon( $key ), // phpcs:ignore
 						( 'rss' === $key ? '' : ' target="_blank"' )
 					);

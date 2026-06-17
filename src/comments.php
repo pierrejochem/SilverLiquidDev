@@ -24,11 +24,13 @@ if ( post_password_required() ) {
 
 		<ol class="comment-list">
 			<?php
-			wp_list_comments( array(
-				'style'      => 'ol',
-				'short_ping' => true,
-				'avatar_size' => 40,
-			) );
+			wp_list_comments(
+				array(
+					'style'       => 'ol',
+					'short_ping'  => true,
+					'avatar_size' => 40,
+				)
+			);
 			?>
 		</ol>
 
@@ -42,10 +44,12 @@ if ( post_password_required() ) {
 	<?php endif; ?>
 
 	<?php
-	comment_form( array(
-		'title_reply'        => __( 'Leave a reply', 'silver-liquid-dev' ),
-		'class_submit'       => 'submit',
-		'comment_notes_before' => '',
-	) );
+	comment_form(
+		array(
+			'title_reply'          => __( 'Leave a reply', 'silver-liquid-dev' ),
+			'class_submit'         => 'submit',
+			'comment_notes_before' => '',
+		)
+	);
 	?>
 </section>

@@ -4,6 +4,7 @@
  *
  * @package Silver_Liquid_Dev
  */
+
 ?>
 <div class="empty-state">
 	<span class="eyebrow"><?php esc_html_e( 'cat: no such file or directory', 'silver-liquid-dev' ); ?></span>

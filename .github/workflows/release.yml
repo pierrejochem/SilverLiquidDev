@@ -1,0 +1,57 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish theme zip
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve version from tag and theme header
+        id: ver
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          header="$(grep -iE '^Version:' src/style.css | head -1 | sed -E 's/^Version:[[:space:]]*//' | tr -d '[:space:]')"
+          echo "tag=$tag"        >> "$GITHUB_OUTPUT"
+          echo "header=$header"  >> "$GITHUB_OUTPUT"
+          echo "Tag version:    $tag"
+          echo "style.css ver:  $header"
+          if [ "$tag" != "$header" ]; then
+            echo "::error::Tag v$tag does not match style.css Version: $header"
+            exit 1
+          fi
+
+      - name: Build package
+        run: make zip
+
+      - name: Extract changelog for this version
+        id: notes
+        run: |
+          ver="${{ steps.ver.outputs.tag }}"
+          # Pull the "= X.Y.Z =" block from the theme readme, if present.
+          block="$(awk -v v="= $ver =" '
+            $0==v {grab=1; next}
+            /^= [0-9]/ {if(grab) exit}
+            grab {print}
+          ' src/readme.txt)"
+          {
+            echo "notes<<EOF"
+            if [ -n "$block" ]; then echo "$block"; else echo "Release $ver"; fi
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Silver Liquid Dev ${{ steps.ver.outputs.tag }}
+          body: ${{ steps.notes.outputs.notes }}
+          files: dist/silver-liquid-dev.zip
+          fail_on_unmatched_files: true

@@ -22,30 +22,38 @@ function silver_liquid_dev_setup() {
 	add_theme_support( 'automatic-feed-links' );
 	add_theme_support( 'title-tag' );
 	add_theme_support( 'post-thumbnails' );
-	add_theme_support( 'custom-logo', array(
-		'height'      => 48,
-		'width'       => 48,
-		'flex-height' => true,
-		'flex-width'  => true,
-	) );
-	add_theme_support( 'html5', array(
-		'search-form',
-		'comment-form',
-		'comment-list',
-		'gallery',
-		'caption',
-		'style',
-		'script',
-	) );
+	add_theme_support(
+		'custom-logo',
+		array(
+			'height'      => 48,
+			'width'       => 48,
+			'flex-height' => true,
+			'flex-width'  => true,
+		)
+	);
+	add_theme_support(
+		'html5',
+		array(
+			'search-form',
+			'comment-form',
+			'comment-list',
+			'gallery',
+			'caption',
+			'style',
+			'script',
+		)
+	);
 	add_theme_support( 'responsive-embeds' );
 	add_theme_support( 'align-wide' );
 	add_theme_support( 'editor-styles' );
 	add_theme_support( 'custom-background' );
 
-	register_nav_menus( array(
-		'primary' => __( 'Primary Menu', 'silver-liquid-dev' ),
-		'footer'  => __( 'Footer Menu', 'silver-liquid-dev' ),
-	) );
+	register_nav_menus(
+		array(
+			'primary' => __( 'Primary Menu', 'silver-liquid-dev' ),
+			'footer'  => __( 'Footer Menu', 'silver-liquid-dev' ),
+		)
+	);
 
 	add_image_size( 'silver-liquid-dev-card', 800, 480, true );
 }
@@ -68,16 +76,20 @@ function silver_liquid_dev_assets() {
 		'silver-liquid-dev-fonts',
 		'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap',
 		array(),
-		null
+		null // Google Fonts is externally versioned; no theme version applies. phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
 	);
 
 	wp_enqueue_style( 'silver-liquid-dev-style', get_stylesheet_uri(), array( 'silver-liquid-dev-fonts' ), SILVER_LIQUID_DEV_VERSION );
 
 	wp_enqueue_script( 'silver-liquid-dev-theme', get_template_directory_uri() . '/assets/js/theme.js', array(), SILVER_LIQUID_DEV_VERSION, true );
-	wp_localize_script( 'silver-liquid-dev-theme', 'silverLiquidDev', array(
-		'copy'   => __( 'Copy', 'silver-liquid-dev' ),
-		'copied' => __( 'Copied', 'silver-liquid-dev' ),
-	) );
+	wp_localize_script(
+		'silver-liquid-dev-theme',
+		'silverLiquidDev',
+		array(
+			'copy'   => __( 'Copy', 'silver-liquid-dev' ),
+			'copied' => __( 'Copied', 'silver-liquid-dev' ),
+		)
+	);
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
@@ -108,15 +120,17 @@ add_action( 'wp_head', 'silver_liquid_dev_color_scheme_script', 1 );
  * Register widget areas.
  */
 function silver_liquid_dev_widgets_init() {
-	register_sidebar( array(
-		'name'          => __( 'Blog Sidebar', 'silver-liquid-dev' ),
-		'id'            => 'sidebar-1',
-		'description'   => __( 'Shown alongside the blog and archive listings.', 'silver-liquid-dev' ),
-		'before_widget' => '<section id="%1$s" class="widget %2$s">',
-		'after_widget'  => '</section>',
-		'before_title'  => '<h2 class="widget-title">',
-		'after_title'   => '</h2>',
-	) );
+	register_sidebar(
+		array(
+			'name'          => __( 'Blog Sidebar', 'silver-liquid-dev' ),
+			'id'            => 'sidebar-1',
+			'description'   => __( 'Shown alongside the blog and archive listings.', 'silver-liquid-dev' ),
+			'before_widget' => '<section id="%1$s" class="widget %2$s">',
+			'after_widget'  => '</section>',
+			'before_title'  => '<h2 class="widget-title">',
+			'after_title'   => '</h2>',
+		)
+	);
 }
 add_action( 'widgets_init', 'silver_liquid_dev_widgets_init' );
 
@@ -140,20 +154,23 @@ function silver_liquid_dev_reading_time( $post_id = null ) {
  * @return array
  */
 function silver_liquid_dev_social_links() {
-	return apply_filters( 'silver_liquid_dev_social_links', array(
-		'github' => array(
-			'label' => 'GitHub',
-			'url'   => 'https://github.com/pierrejochem',
-		),
-		'nuget'  => array(
-			'label' => 'NuGet',
-			'url'   => 'https://www.nuget.org/profiles/pierrejochem',
-		),
-		'rss'    => array(
-			'label' => 'RSS',
-			'url'   => get_feed_link(),
-		),
-	) );
+	return apply_filters(
+		'silver_liquid_dev_social_links',
+		array(
+			'github' => array(
+				'label' => 'GitHub',
+				'url'   => 'https://github.com/pierrejochem',
+			),
+			'nuget'  => array(
+				'label' => 'NuGet',
+				'url'   => 'https://www.nuget.org/profiles/pierrejochem',
+			),
+			'rss'    => array(
+				'label' => 'RSS',
+				'url'   => get_feed_link(),
+			),
+		)
+	);
 }
 
 /**
@@ -212,6 +229,9 @@ add_filter( 'excerpt_length', 'silver_liquid_dev_excerpt_length' );
 
 /**
  * Add a class to <pre> blocks so the JS copy button can attach reliably.
+ *
+ * @param array $classes Body classes.
+ * @return array
  */
 function silver_liquid_dev_body_classes( $classes ) {
 	if ( is_singular() ) {

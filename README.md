@@ -66,6 +66,22 @@ make zip
 Produces `dist/silver-liquid-dev.zip`, wrapped in a top-level `silver-liquid-dev/` folder as
 WordPress requires. Install it on any site via **Appearance → Themes → Add New → Upload Theme**.
 
+## Continuous integration
+
+GitHub Actions workflows live in `.github/workflows/`:
+
+- **CI** (`ci.yml`) — runs on every push / PR to `main`:
+  - PHP syntax lint across PHP 7.4 → 8.3
+  - WordPress Coding Standards (PHPCS + WPCS, config in `phpcs.xml.dist`) — fails on errors, warnings are advisory
+  - Builds the theme zip and verifies it's wrapped in a single `silver-liquid-dev/` folder (uploaded as an artifact)
+- **Release** (`release.yml`) — runs on a `v*` tag: verifies the tag matches the `Version:` header in `style.css`, builds the zip, and publishes a GitHub Release with the zip attached and the matching changelog section as notes.
+
+Cut a release:
+
+```bash
+git tag v1.1.0 && git push origin v1.1.0
+```
+
 ## Project structure
 
 ```
@@ -82,6 +98,8 @@ WordPress requires. Install it on any site via **Appearance → Themes → Add N
 │   ├── example-content.xml  # pseudonymized WXR export
 │   └── media-export.tar     # media library archive
 ├── dist/                    # built theme zip (generated)
+├── .github/workflows/       # CI (lint + WPCS + package) and Release pipelines
+├── phpcs.xml.dist           # WordPress Coding Standards config
 ├── docker-compose.yml       # WordPress + MariaDB + wp-cli
 └── Makefile                 # dev environment driver
 ```
