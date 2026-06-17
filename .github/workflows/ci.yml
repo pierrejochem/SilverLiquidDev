@@ -72,7 +72,7 @@ jobs:
           unzip -l dist/silver-liquid-dev.zip | grep -q "silver-liquid-dev/style.css"
           unzip -l dist/silver-liquid-dev.zip | grep -q "silver-liquid-dev/readme.txt"
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: silver-liquid-dev-zip
           path: dist/silver-liquid-dev.zip
